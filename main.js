@@ -9,17 +9,68 @@ const { Builder, By, Key, until } = require("selenium-webdriver");
 const findElement = require("./findElement");
 const waitElementAppera = require("./waitElementAppera");
 const openChorme = require("./openChorme");
+const fs = require('fs');
+
+// 根据索引获取职位描述
+async function getJobDescriptionByIndex(index, webDriver) {
+  try {
+    const PositioningStrategyJobLi = By.xpath(`//*[@id='wrap']/div[2]/div[2]/div/div/div[1]/ul/li[${index}]`)
+    const jobLiElement = await webDriver.findElement(PositioningStrategyJobLi);
+    // 点击招聘信息列表中的项
+    await jobLiElement.click();
+
+    // 找到描述信息节点并获取文字
+    const PositioningStrategyJobLiDescription = By.xpath("//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[2]/p");
+    await waitElementAppera(PositioningStrategyJobLiDescription, webDriver, until);
+    const jobLiDescriptionElement = await findElement(PositioningStrategyJobLiDescription, webDriver);
+    return jobLiDescriptionElement.getText();
+  } catch (error) {
+    console.log(`在索引 ${index} 处找不到工作。`);
+    return null;
+  }
+}
+
+const readFile = (path) => {
+  return fs.readFileSync(path, 'utf-8');
+}
+
 
 const main = async () => {
+    // 打开浏览器
   const webDriver = await openChorme(Builder);
+
   // 定位到页面中登陆注册按钮
-  const PositioningStrategy = By.xpath("//*[@id='header']/div[1]/div[3]/div/a");
+  const PositioningStrategyLoginBtn = By.xpath("//*[@id='header']/div[1]/div[3]/div/a");
   // 等待登陆注册按钮元素出现
-  await waitElementAppera(PositioningStrategy, webDriver, until);
+  await waitElementAppera(PositioningStrategyLoginBtn, webDriver, until);
   // 查找登陆注册按钮
-  const ele = await findElement(PositioningStrategy, webDriver);
-  // 点击登陆注册按钮
-  await ele.click();
+  const loginBtnEle = await findElement(PositioningStrategyLoginBtn, webDriver);
+  // 点击登陆注册按钮跳转到登陆页
+  await loginBtnEle.click();
+  
+    // 定位到微信登录按钮出现
+  const PositioningStrategyWechatLoginBtn = By.xpath("//*[@id='wrap']/div/div[2]/div[2]/div[2]/div[1]/div[4]/a");
+  // 等到微信登陆按钮的出现
+  await waitElementAppera(PositioningStrategyWechatLoginBtn, webDriver, until);
+  // 找到微信登陆按钮元素
+  const wechatLoginBtn = await findElement(PositioningStrategyWechatLoginBtn, webDriver);
+  // 选择微信扫码登录
+  await wechatLoginBtn.click();
+
+  // 等待用户扫码，登录成功
+  // TODO: 添加超时处理措施
+  const PositioningStrategyLoginSuccess = By.xpath("//*[@id='header']/div[1]/div[3]/ul/li[2]/a");
+  await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until)
+
+  // 获取职位描述信息
+  const des = await getJobDescriptionByIndex(1, webDriver);
+  
+  // 获取简历描述信息
+  const fileContent = readFile('./test.txt');
+
+  // 连接openAI
+  
 };
 
 main();
+
