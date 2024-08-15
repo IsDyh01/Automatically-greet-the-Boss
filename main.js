@@ -10,6 +10,15 @@ const findElement = require("./findElement");
 const waitElementAppera = require("./waitElementAppera");
 const openChorme = require("./openChorme");
 const fs = require('fs');
+const ai = require('openai');
+
+const openai = new ai({
+  apiKey: 'sk-qbFiVoTPrhxaVU3qANqLtnWAqsjvmuurcU3Q6LnJ87tfW2ch',
+  baseURL: "https://api.chatanywhere.com.cn"
+})
+
+
+
 
 // 根据索引获取职位描述
 async function getJobDescriptionByIndex(index, webDriver) {
@@ -32,6 +41,16 @@ async function getJobDescriptionByIndex(index, webDriver) {
 
 const readFile = (path) => {
   return fs.readFileSync(path, 'utf-8');
+}
+
+const getHelloContent = async (jobDes, personalDes) => {
+  const prompt = `你好，这个是我都个人简历内容${personalDes},这个是我要找的工作简介${jobDes},请根据我的简历内容以及工作简介，为我生成一段给公司hr打招呼的招呼语，可以让hr看到我的优点以及与该岗位的匹配度`;
+  const choices = await openai.chat.completions.create({
+        model:"gpt-3.5-turbo",
+        messages:[ {role:"user", content: prompt}]
+  })
+  const helloConent = choices[0].messages.content;
+  return helloConent;
 }
 
 
@@ -63,12 +82,15 @@ const main = async () => {
   await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until)
 
   // 获取职位描述信息
-  const des = await getJobDescriptionByIndex(1, webDriver);
+  const jobDes = await getJobDescriptionByIndex(1, webDriver);
   
   // 获取简历描述信息
-  const fileContent = readFile('./test.txt');
+  const personalDes = readFile('./test.txt');
 
-  // 连接openAI
+  // 调用openai根据职位描述以及简历信息生成招呼语
+  const helloContent = await getHelloContent(jobDes, personalDes);
+  console.log(helloContent);
+  
   
 };
 
