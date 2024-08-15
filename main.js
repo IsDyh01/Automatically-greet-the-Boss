@@ -31,7 +31,8 @@ async function getJobDescriptionByIndex(index, webDriver) {
     // 找到描述信息节点并获取文字
     const PositioningStrategyJobLiDescription = By.xpath("//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[2]/p");
     await waitElementAppera(PositioningStrategyJobLiDescription, webDriver, until);
-    const jobLiDescriptionElement = await findElement(PositioningStrategyJobLiDescription, webDriver);
+  const jobLiDescriptionElement = await findElement(PositioningStrategyJobLiDescription, webDriver);
+  
     return jobLiDescriptionElement.getText();
   } catch (error) {
     console.log(`在索引 ${index} 处找不到工作。`);
@@ -44,12 +45,12 @@ const readFile = (path) => {
 }
 
 const getHelloContent = async (jobDes, personalDes) => {
-  const prompt = `你好，这个是我都个人简历内容${personalDes},这个是我要找的工作简介${jobDes},请根据我的简历内容以及工作简介，为我生成一段给公司hr打招呼的招呼语，可以让hr看到我的优点以及与该岗位的匹配度`;
-  const choices = await openai.chat.completions.create({
+  const prompt = `你好，这个是我都个人简历内容${personalDes},这个是我要找的工作简介${jobDes},请根据我的简历内容以及工作简介，为我生成一段给公司hr打招呼的招呼语，只用生成招呼语额外的跟我打招呼的语句都不要！`;
+  const completion = await openai.chat.completions.create({
         model:"gpt-3.5-turbo",
         messages:[ {role:"user", content: prompt}]
   })
-  const helloConent = choices[0].messages.content;
+  const helloConent = completion.choices[0].message.content;
   return helloConent;
 }
 
@@ -82,14 +83,19 @@ const main = async () => {
   await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until)
 
   // 获取职位描述信息
-  const jobDes = await getJobDescriptionByIndex(1, webDriver);
+  const jobDes = await getJobDescriptionByIndex(2, webDriver);
+  console.log('职位描述信息: ', jobDes);
+  
   
   // 获取简历描述信息
   const personalDes = readFile('./test.txt');
+  console.log('简历描述信息:', personalDes);
+  
 
   // 调用openai根据职位描述以及简历信息生成招呼语
   const helloContent = await getHelloContent(jobDes, personalDes);
-  console.log(helloContent);
+  
+  console.log('生成招呼语:', helloContent);
   
   
 };
