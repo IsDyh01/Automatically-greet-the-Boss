@@ -21,7 +21,8 @@ const openai = new ai({
 });
 
 const main = async () => {
-  // 打开浏览器
+  try {
+    // 打开浏览器
   const webDriver = await openChorme(Builder);
 
   // 定位到页面中登陆注册按钮
@@ -29,9 +30,9 @@ const main = async () => {
     "//*[@id='header']/div[1]/div[3]/div/a"
   );
   // 等待登陆注册按钮元素出现
-  await waitElementAppera(PositioningStrategyLoginBtn, webDriver, until);
+  await waitElementAppera(PositioningStrategyLoginBtn, webDriver, until, '登陆注册按钮');
   // 查找登陆注册按钮
-  const loginBtnEle = await findElement(PositioningStrategyLoginBtn, webDriver);
+  const loginBtnEle = await findElement(PositioningStrategyLoginBtn, webDriver, '登陆注册按钮');
   // 点击登陆注册按钮跳转到登陆页
   await loginBtnEle.click();
 
@@ -40,11 +41,12 @@ const main = async () => {
     "//*[@id='wrap']/div/div[2]/div[2]/div[2]/div[1]/div[4]/a"
   );
   // 等到微信登陆按钮的出现
-  await waitElementAppera(PositioningStrategyWechatLoginBtn, webDriver, until);
+  await waitElementAppera(PositioningStrategyWechatLoginBtn, webDriver, until, '微信登陆按钮');
   // 找到微信登陆按钮元素
   const wechatLoginBtn = await findElement(
     PositioningStrategyWechatLoginBtn,
-    webDriver
+    webDriver,
+    '微信登陆按钮'
   );
   // 选择微信扫码登录
   await wechatLoginBtn.click();
@@ -54,7 +56,7 @@ const main = async () => {
   const PositioningStrategyLoginSuccess = By.xpath(
     "//*[@id='header']/div[1]/div[3]/ul/li[2]/a"
   );
-  await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until);
+  await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until, '扫成成功');
 
   // 获取简历描述信息
   const personalDes = readCurriculumviatae("./test.txt");
@@ -132,6 +134,10 @@ const main = async () => {
     webDriver.navigate().back();
 
     index++;
+  }
+  } catch (error) {
+    console.log(`出错啦~：${error}`);
+    
   }
 };
 

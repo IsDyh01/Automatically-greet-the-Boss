@@ -3,7 +3,8 @@ const chrome = require("selenium-webdriver/chrome");
  * 打开谷歌浏览器
  */
 const openChorme = async (Builder) => {
-  const options = new chrome.Options();
+  try {
+    const options = new chrome.Options();
   options.addArguments("--detach");
   let webDriver = await new Builder()
     .forBrowser("chrome")
@@ -16,6 +17,11 @@ const openChorme = async (Builder) => {
     "https://www.zhipin.com/web/geek/job-recommend?ka=header-job-recommend"
   );
   return webDriver;
+  } catch (error) {
+    console.log(error);
+    
+    return Promise.reject('打开浏览器出错了....')
+  }
 };
 
 module.exports = openChorme;
