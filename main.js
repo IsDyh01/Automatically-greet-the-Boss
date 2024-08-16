@@ -56,49 +56,83 @@ const main = async () => {
   );
   await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until);
 
-  // 获取职位描述信息
-  const jobDes = await getJobDescriptionByIndex(2, webDriver, By);
-  console.log("职位描述信息: ", jobDes);
-
   // 获取简历描述信息
   const personalDes = readCurriculumviatae("./test.txt");
   console.log("简历描述信息:", personalDes);
+  
+  let index = 1;
 
-  // 调用openai根据职位描述以及简历信息生成招呼语
-  const helloContent = await getHelloContent(openai, jobDes, personalDes);
+  // 循环
+  while (true) {
+  
+    //获取职位描述信息
 
-  console.log("生成招呼语:", helloContent);
+    const jobDes = await getJobDescriptionByIndex(index, webDriver, By);
+  
+    console.log("职位描述信息: ", jobDes);
+  
+    // 调用openai根据职位描述以及简历信息生成招呼语
+  
+    const helloContent = await getHelloContent(openai, jobDes, personalDes);
 
-  // 立即沟通按钮
-  const PositioningStrategyCommunicationBtn = By.xpath(
-    "//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/a[2]"
-  );
-  // 等待立即沟通按钮出现
-  await waitElementAppera(
-    PositioningStrategyCommunicationBtn,
-    webDriver,
-    until
-  );
-  // 找到立即沟通按钮
-  const communicationBtn = await findElement(
-    PositioningStrategyCommunicationBtn,
-    webDriver
-  );
-  // 点击沟通按钮进入聊天页
-  await communicationBtn.click();
+  
+    console.log("生成招呼语:", helloContent);
 
-  // 聊天框
-  const PositioningStrategyChatBox = By.xpath("//*[@id='chat-input']");
-  // 等待聊天框出现
-  await waitElementAppera(PositioningStrategyChatBox, webDriver, until);
-  // 找到聊天框
-  const chatBox = await findElement(PositioningStrategyChatBox, webDriver);
-  // 清除聊天框可能的内容
-  await chatBox.clear();
-  // 将招呼语复制到聊天框内
-  await chatBox.sendKeys(helloContent);
-  // 发送
-  await chatBox.sendKeys(Key.ENTER);
+    // 立即沟通按钮
+  
+    const PositioningStrategyCommunicationBtn = By.xpath(
+      "//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/a[2]"
+    );
+  
+    // 等待立即沟通按钮出现
+    
+    await waitElementAppera(
+      PositioningStrategyCommunicationBtn,
+      webDriver,
+      until
+    );
+  
+    // 找到立即沟通按钮
+  
+    const communicationBtn = await findElement(
+      PositioningStrategyCommunicationBtn,
+      webDriver
+    );
+  
+    // 点击沟通按钮进入聊天页
+  
+    await communicationBtn.click();
+ 
+    // 聊天框
+  
+    const PositioningStrategyChatBox = By.xpath("//*[@id='chat-input']");
+  
+    // 等待聊天框出现
+  
+    await waitElementAppera(PositioningStrategyChatBox, webDriver, until);
+  
+    // 找到聊天框
+  
+    const chatBox = await findElement(PositioningStrategyChatBox, webDriver);
+  
+    // 清除聊天框可能的内容
+  
+    await chatBox.clear();
+
+    // 将招呼语复制到聊天框内
+  
+    await chatBox.sendKeys(helloContent);
+  
+    // 发送
+
+    await chatBox.sendKeys(Key.ENTER);
+
+    // 回退到上一页
+    
+    webDriver.navigate().back();
+
+    index++;
+  }
 };
 
 main();
