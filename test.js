@@ -6,3 +6,4 @@ console.log(2222);
 
 console.log(5555);
 
+console.log(6666);
