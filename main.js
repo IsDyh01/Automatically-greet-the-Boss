@@ -25,7 +25,7 @@ const openai = new ai({
 const main = async () => {
   try {
     // 打开浏览器
-  // const webDriver = await openChorme(Builder);
+  const webDriver = await openChorme(Builder);
 
   // // 定位到页面中登陆注册按钮
   // const PositioningStrategyLoginBtn = By.xpath(
@@ -64,7 +64,19 @@ const main = async () => {
     const answer = await inputPrompt({ name: 'jobName', message: '请输入职位名称' });
     const jobName = answer.jobName;
 
-    // 获取搜索框元素
+    // 先获取网页头部搜索a标签元素
+    const PositioningStrategySearchLink = By.xpath('//a[@href="https://www.zhipin.com/job_detail/?ka=header-job"]')
+    
+    // 等待搜索a标签搜索元素的出现
+    await waitElementAppera(PositioningStrategySearchLink, webDriver, until, 'a标签搜索');
+
+    // 找到a标签搜索元素
+    const searchLinkElement = await findElement(PositioningStrategySearchLink, webDriver, 'a标签搜索');
+    
+    
+    // 点击a标签搜索元素进行跳转
+    await searchLinkElement.click();
+    
 
     // 将职位名称输入到搜索框，进行搜索
     
