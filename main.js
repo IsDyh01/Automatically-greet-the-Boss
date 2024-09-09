@@ -79,11 +79,11 @@ const main = async () => {
     );
 
     // 控制台获取想要投递的职位名称
-    // const answer = await inputPrompt({
-    //   name: "jobName",
-    //   message: "请输入职位名称",
-    // });
-    // const jobName = answer.jobName;
+    const answer = await inputPrompt({
+      name: "jobName",
+      message: "请输入职位名称",
+    });
+    const jobName = answer.jobName;
 
     // 先获取网页头部搜索a标签元素
     const PositioningStrategySearchLink = By.xpath(
@@ -123,7 +123,7 @@ const main = async () => {
       webDriver,
       "搜索框"
     );
-    await searchInputElement.sendKeys("前端");
+    await searchInputElement.sendKeys(jobName);
     await searchInputElement.sendKeys(Key.ENTER);
 
     // 获取简历描述信息
