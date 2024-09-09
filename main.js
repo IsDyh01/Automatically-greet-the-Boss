@@ -126,11 +126,55 @@ const main = async () => {
     await searchInputElement.sendKeys(jobName);
     await searchInputElement.sendKeys(Key.ENTER);
 
+    // 职位列表中的每一项
+    const PositioningStrategyJobListItem = By.xpath(
+      '//*[@id="wrap"]/div[2]/div[2]/div/div[1]/div[2]/ul/li[1]/div[1]/a'
+    );
+    await waitElementAppera(
+      PositioningStrategyJobListItem,
+      webDriver,
+      until,
+      "职位列表中的每一项"
+    );
+    const jobListItemElement = await findElement(
+      PositioningStrategyJobListItem,
+      webDriver,
+      "职位列表中的每一项"
+    );
+    await jobListItemElement.click(); // 会打开新标签页，需要切换到该标签页进行操作
+    // 通过句柄切换到新标签页
+    let handles;
+    do {
+      handles = await webDriver.getAllWindowHandles();
+      // 这里可以添加一些逻辑来检查句柄数量是否增加，但更可靠的是检查特定元素是否可见
+      // 例如，使用 driver.wait(until.elementLocated(By.someLocator), timeout)
+    } while (handles.length <= 1); // 假设初始时只有一个标签页
+
+    // 切换到新标签页（假设它是最后打开的）
+    await webDriver.switchTo().window(handles[handles.length - 1]);
+
+    // 获取立即沟通按钮
+    const PositioningStrategyCommunication = By.xpath(
+      "//*[@id=wrap]/div[2]/div[1]/div/div/div[1]/div[3]/div[1]/a[2]"
+    );
+    await waitElementAppera(
+      PositioningStrategyCommunication,
+      webDriver,
+      until,
+      "立即沟通按钮"
+    );
+    const communicationElement = await findElement(
+      PositioningStrategyCommunication,
+      webDriver,
+      "立即沟通按钮"
+    );
+    communicationElement.click();
+
     // 获取简历描述信息
     const personalDes = readCurriculumviatae("./test.txt");
     console.log("简历描述信息:", personalDes);
 
-    let index = 1;
+    // let index = 1;
 
     // 循环
     // while (true) {
