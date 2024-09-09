@@ -14,6 +14,8 @@ const ai = require("openai");
 const readCurriculumviatae = require("./readCurriculumvitae");
 const getHelloContent = require("./getHelloContent");
 const getJobDescriptionByIndex = require("./getJobDescriptionByIndex");
+const { inputPrompt  } = require('./promptUtil')
+
 
 const openai = new ai({
   apiKey: OPENAI_CONFIG.API_KEY,
@@ -23,40 +25,49 @@ const openai = new ai({
 const main = async () => {
   try {
     // 打开浏览器
-  const webDriver = await openChorme(Builder);
+  // const webDriver = await openChorme(Builder);
 
-  // 定位到页面中登陆注册按钮
-  const PositioningStrategyLoginBtn = By.xpath(
-    "//*[@id='header']/div[1]/div[3]/div/a"
-  );
-  // 等待登陆注册按钮元素出现
-  await waitElementAppera(PositioningStrategyLoginBtn, webDriver, until, '登陆注册按钮');
-  // 查找登陆注册按钮
-  const loginBtnEle = await findElement(PositioningStrategyLoginBtn, webDriver, '登陆注册按钮');
-  // 点击登陆注册按钮跳转到登陆页
-  await loginBtnEle.click();
+  // // 定位到页面中登陆注册按钮
+  // const PositioningStrategyLoginBtn = By.xpath(
+  //   "//*[@id='header']/div[1]/div[3]/div/a"
+  // );
+  // // 等待登陆注册按钮元素出现
+  // await waitElementAppera(PositioningStrategyLoginBtn, webDriver, until, '登陆注册按钮');
+  // // 查找登陆注册按钮
+  // const loginBtnEle = await findElement(PositioningStrategyLoginBtn, webDriver, '登陆注册按钮');
+  // // 点击登陆注册按钮跳转到登陆页
+  // await loginBtnEle.click();
 
-  // 定位到微信登录按钮出现
-  const PositioningStrategyWechatLoginBtn = By.xpath(
-    "//*[@id='wrap']/div/div[2]/div[2]/div[2]/div[1]/div[4]/a"
-  );
-  // 等到微信登陆按钮的出现
-  await waitElementAppera(PositioningStrategyWechatLoginBtn, webDriver, until, '微信登陆按钮');
-  // 找到微信登陆按钮元素
-  const wechatLoginBtn = await findElement(
-    PositioningStrategyWechatLoginBtn,
-    webDriver,
-    '微信登陆按钮'
-  );
-  // 选择微信扫码登录
-  await wechatLoginBtn.click();
+  // // 定位到微信登录按钮出现
+  // const PositioningStrategyWechatLoginBtn = By.xpath(
+  //   "//*[@id='wrap']/div/div[2]/div[2]/div[2]/div[1]/div[4]/a"
+  // );
+  // // 等到微信登陆按钮的出现
+  // await waitElementAppera(PositioningStrategyWechatLoginBtn, webDriver, until, '微信登陆按钮');
+  // // 找到微信登陆按钮元素
+  // const wechatLoginBtn = await findElement(
+  //   PositioningStrategyWechatLoginBtn,
+  //   webDriver,
+  //   '微信登陆按钮'
+  // );
+  // // 选择微信扫码登录
+  // await wechatLoginBtn.click();
 
-  // 等待用户扫码，登录成功
-  // TODO: 添加超时处理措施
-  const PositioningStrategyLoginSuccess = By.xpath(
-    "//*[@id='header']/div[1]/div[3]/ul/li[2]/a"
-  );
-  await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until, '扫成成功');
+  // // 等待用户扫码，登录成功
+  // // TODO: 添加超时处理措施
+  // const PositioningStrategyLoginSuccess = By.xpath(
+  //   "//*[@id='header']/div[1]/div[3]/ul/li[2]/a"
+  // );
+  //   await waitElementAppera(PositioningStrategyLoginSuccess, webDriver, until, '扫描成功');
+    
+    // 控制台获取想要投递的职位名称
+    const answer = await inputPrompt({ name: 'jobName', message: '请输入职位名称' });
+    const jobName = answer.jobName;
+
+    // 获取搜索框元素
+
+    // 将职位名称输入到搜索框，进行搜索
+    
 
   // 获取简历描述信息
   const personalDes = readCurriculumviatae("./test.txt");
@@ -65,76 +76,76 @@ const main = async () => {
   let index = 1;
 
   // 循环
-  while (true) {
+  // while (true) {
   
-    //获取职位描述信息
+  //   // 获取职位描述信息
 
-    const jobDes = await getJobDescriptionByIndex(index, webDriver, By);
+  //   const jobDes = await getJobDescriptionByIndex(index, webDriver, By);
   
-    console.log("职位描述信息: ", jobDes);
+  //   console.log("职位描述信息: ", jobDes);
   
-    // 调用openai根据职位描述以及简历信息生成招呼语
+  //   // 调用openai根据职位描述以及简历信息生成招呼语
   
-    const helloContent = await getHelloContent(openai, jobDes, personalDes);
+  //   const helloContent = await getHelloContent(openai, jobDes, personalDes);
 
   
-    console.log("生成招呼语:", helloContent);
+  //   console.log("生成招呼语:", helloContent);
 
-    // 立即沟通按钮
+  //   // 立即沟通按钮
   
-    const PositioningStrategyCommunicationBtn = By.xpath(
-      "//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/a[2]"
-    );
+  //   const PositioningStrategyCommunicationBtn = By.xpath(
+  //     "//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/a[2]"
+  //   );
   
-    // 等待立即沟通按钮出现
+  //   // 等待立即沟通按钮出现
     
-    await waitElementAppera(
-      PositioningStrategyCommunicationBtn,
-      webDriver,
-      until
-    );
+  //   await waitElementAppera(
+  //     PositioningStrategyCommunicationBtn,
+  //     webDriver,
+  //     until
+  //   );
   
-    // 找到立即沟通按钮
+  //   // 找到立即沟通按钮
   
-    const communicationBtn = await findElement(
-      PositioningStrategyCommunicationBtn,
-      webDriver
-    );
+  //   const communicationBtn = await findElement(
+  //     PositioningStrategyCommunicationBtn,
+  //     webDriver
+  //   );
   
-    // 点击沟通按钮进入聊天页
+  //   // 点击沟通按钮进入聊天页
   
-    await communicationBtn.click();
+  //   await communicationBtn.click();
  
-    // 聊天框
+  //   // 聊天框
   
-    const PositioningStrategyChatBox = By.xpath("//*[@id='chat-input']");
+  //   const PositioningStrategyChatBox = By.xpath("//*[@id='chat-input']");
   
-    // 等待聊天框出现
+  //   // 等待聊天框出现
   
-    await waitElementAppera(PositioningStrategyChatBox, webDriver, until);
+  //   await waitElementAppera(PositioningStrategyChatBox, webDriver, until);
   
-    // 找到聊天框
+  //   // 找到聊天框
   
-    const chatBox = await findElement(PositioningStrategyChatBox, webDriver);
+  //   const chatBox = await findElement(PositioningStrategyChatBox, webDriver);
   
-    // 清除聊天框可能的内容
+  //   // 清除聊天框可能的内容
   
-    await chatBox.clear();
+  //   await chatBox.clear();
 
-    // 将招呼语复制到聊天框内
+  //   // 将招呼语复制到聊天框内
   
-    await chatBox.sendKeys(helloContent);
+  //   await chatBox.sendKeys(helloContent);
   
-    // 发送
+  //   // 发送
 
-    await chatBox.sendKeys(Key.ENTER);
+  //   await chatBox.sendKeys(Key.ENTER);
 
-    // 回退到上一页
+  //   // 回退到上一页
     
-    webDriver.navigate().back();
+  //   webDriver.navigate().back();
 
-    index++;
-  }
+  //   index++;
+  // }
   } catch (error) {
     console.log(`出错啦~：${error}`);
     
