@@ -235,7 +235,10 @@ const main = async () => {
     await sendButtonElement.click();
 
     // 关闭该职位详情标签页，重新回到职位列表页,继续点击下一个职位打招呼
-
+    // 关闭新标签页
+    await webDriver.close();
+    // 通过句柄回到原职位列表标签页
+    await webDriver.switchTo().window(handles[0]);
     // let index = 1;
 
     // 循环
