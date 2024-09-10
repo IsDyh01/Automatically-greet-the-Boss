@@ -153,9 +153,24 @@ const main = async () => {
     // 切换到新标签页（假设它是最后打开的）
     await webDriver.switchTo().window(handles[handles.length - 1]);
 
+    // 获取该职位详情
+    const PositioningStrategyJobDetail = By.xpath('//*[@id="wrap"]/div[2]/div[3]/div/div[2]/div[1]/div[3]');
+    await waitElementAppera(PositioningStrategyJobDetail, webDriver, until, '职位详情');
+    const jobDetailElement = await findElement(PositioningStrategyJobDetail, webDriver, '职位详情');
+    const jobDetailContent = await jobDetailElement.getText(); // 拿到职位详情
+    
+
+    // 获取简历描述信息
+    const personalDes = readCurriculumviatae("./test.txt");
+    console.log("简历描述信息:", personalDes);
+
+    // 调用openai根据简历信息和职位详情获取招呼语
+    const helloContent = await getHelloContent(openai, jobDetailContent, personalDes);
+    
+
     // 获取立即沟通按钮
     const PositioningStrategyCommunication = By.xpath(
-      "//*[@id=wrap]/div[2]/div[1]/div/div/div[1]/div[3]/div[1]/a[2]"
+      "//*[@id='wrap']/div[2]/div[1]/div/div/div[1]/div[3]/div[1]/a[2]"
     );
     await waitElementAppera(
       PositioningStrategyCommunication,
@@ -168,11 +183,16 @@ const main = async () => {
       webDriver,
       "立即沟通按钮"
     );
-    communicationElement.click();
+    await communicationElement.click(); // 首次点击立即沟通后会出现聊天弹窗
 
-    // 获取简历描述信息
-    const personalDes = readCurriculumviatae("./test.txt");
-    console.log("简历描述信息:", personalDes);
+    // 找到聊天弹窗中的输入框
+    const PositioningStrategyChatModalInput = By.xpath("//*[@class='dialog-wrap']/div[2]/div[2]/div/div[1]/div[2]/textarea");
+    await waitElementAppera(PositioningStrategyChatModalInput, webDriver, until, '聊天弹窗输入框');
+    const chatModalInputElement = await findElement(PositioningStrategyChatModalInput, webDriver, '聊天弹窗输入框');
+    chatModalInputElement.sendKeys(helloContent); // 将招呼语输入到输入框中
+    chatModalInputElement.sendKeys(Key.ENTER); // 并输入回车键
+
+    // 关闭该职位详情标签页，重新回到职位列表页,继续点击下一个职位打招呼
 
     // let index = 1;
 
