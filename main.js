@@ -191,6 +191,7 @@ const main = async () => {
     const chatModalInputElement = await findElement(PositioningStrategyChatModalInput, webDriver, '聊天弹窗输入框');
     chatModalInputElement.sendKeys(helloContent); // 将招呼语输入到输入框中
     chatModalInputElement.sendKeys(Key.ENTER); // 并输入回车键
+    //
 
     // 关闭该职位详情标签页，重新回到职位列表页,继续点击下一个职位打招呼
 
