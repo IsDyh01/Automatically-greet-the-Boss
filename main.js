@@ -239,78 +239,10 @@ const main = async () => {
     await webDriver.close();
     // 通过句柄回到原职位列表标签页
     await webDriver.switchTo().window(handles[0]);
-    // let index = 1;
 
-    // 循环
-    // while (true) {
+    // 后续需要循环顺序点击职位卡片进入职位新标签页，一页内的职位如果循环完成，还需要通过分页器进入到下一页
 
-    //   // 获取职位描述信息
-
-    //   const jobDes = await getJobDescriptionByIndex(index, webDriver, By);
-
-    //   console.log("职位描述信息: ", jobDes);
-
-    //   // 调用openai根据职位描述以及简历信息生成招呼语
-
-    //   const helloContent = await getHelloContent(openai, jobDes, personalDes);
-
-    //   console.log("生成招呼语:", helloContent);
-
-    //   // 立即沟通按钮
-
-    //   const PositioningStrategyCommunicationBtn = By.xpath(
-    //     "//*[@id='wrap']/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/a[2]"
-    //   );
-
-    //   // 等待立即沟通按钮出现
-
-    //   await waitElementAppera(
-    //     PositioningStrategyCommunicationBtn,
-    //     webDriver,
-    //     until
-    //   );
-
-    //   // 找到立即沟通按钮
-
-    //   const communicationBtn = await findElement(
-    //     PositioningStrategyCommunicationBtn,
-    //     webDriver
-    //   );
-
-    //   // 点击沟通按钮进入聊天页
-
-    //   await communicationBtn.click();
-
-    //   // 聊天框
-
-    //   const PositioningStrategyChatBox = By.xpath("//*[@id='chat-input']");
-
-    //   // 等待聊天框出现
-
-    //   await waitElementAppera(PositioningStrategyChatBox, webDriver, until);
-
-    //   // 找到聊天框
-
-    //   const chatBox = await findElement(PositioningStrategyChatBox, webDriver);
-
-    //   // 清除聊天框可能的内容
-
-    //   await chatBox.clear();
-
-    //   // 将招呼语复制到聊天框内
-
-    //   await chatBox.sendKeys(helloContent);
-
-    //   // 发送
-
-    //   await chatBox.sendKeys(Key.ENTER);
-
-    //   // 回退到上一页
-
-    //   webDriver.navigate().back();
-
-    //   index++;
-    // }
+    // 一直等到招呼所有次数都用完停止
   } catch (error) {
     console.log(`出错啦~：${error}`);
   }
